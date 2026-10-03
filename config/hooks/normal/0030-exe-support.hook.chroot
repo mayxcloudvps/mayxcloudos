@@ -1,0 +1,11 @@
+#!/bin/sh
+# Bật hỗ trợ chạy .exe: binfmt_misc + liên kết file.
+set -e
+
+chmod 0755 /usr/local/bin/mayx-run-exe /usr/local/bin/mayx-first-login
+
+# systemd nạp /etc/binfmt.d/mayxcloudos-exe.conf mỗi lần khởi động
+systemctl enable systemd-binfmt.service || true
+
+update-desktop-database /usr/share/applications || true
+update-mime-database /usr/share/mime || true

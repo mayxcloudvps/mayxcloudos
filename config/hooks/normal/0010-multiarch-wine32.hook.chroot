@@ -1,0 +1,11 @@
+#!/bin/sh
+# Thêm kiến trúc i386 để chạy được cả app Windows 32-bit.
+set -e
+
+dpkg --add-architecture i386
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+	wine32:i386 \
+	libvulkan1:i386 \
+	mesa-vulkan-drivers:i386 \
+	libgl1-mesa-dri:i386

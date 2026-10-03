@@ -1,0 +1,50 @@
+# ---- Giao diện desktop ----
+kde-plasma-desktop
+sddm
+plasma-nm
+plasma-pa
+dolphin
+konsole
+kate
+ark
+spectacle
+gwenview
+okular
+kcalc
+firefox-esr
+network-manager
+pipewire-audio
+sudo
+spice-vdagent
+
+# ---- Chạy file Windows (.exe) ----
+wine
+wine64
+libwine
+fonts-wine
+winetricks
+dxvk
+cabextract
+p7zip-full
+unzip
+libnotify-bin
+libvulkan1
+mesa-vulkan-drivers
+libgl1-mesa-dri
+
+# ---- Tiếng Việt ----
+locales
+fcitx5
+fcitx5-unikey
+fcitx5-config-qt
+kde-config-fcitx5
+fonts-noto-core
+fonts-liberation2
+fonts-dejavu
+
+# ---- Cài vào ổ cứng ----
+calamares
+calamares-settings-debian
+
+# ---- Tiện ích build ----
+librsvg2-bin

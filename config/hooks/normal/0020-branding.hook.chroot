@@ -1,0 +1,37 @@
+#!/bin/sh
+# Đặt tên/branding mayxcloudos.
+set -e
+
+# /etc/os-release là symlink tới /usr/lib/os-release trên Debian
+cat > /usr/lib/os-release <<'EOF'
+PRETTY_NAME="mayxcloudos 1.0"
+NAME="mayxcloudos"
+VERSION_ID="1.0"
+VERSION="1.0 (May)"
+VERSION_CODENAME=may
+ID=mayxcloudos
+ID_LIKE=debian
+EOF
+
+printf 'mayxcloudos 1.0 \\n \\l\n\n' > /etc/issue
+printf 'mayxcloudos 1.0\n' > /etc/issue.net
+echo mayxcloudos > /etc/hostname
+
+# Hình nền: SVG -> PNG (dùng cho Plasma và màn hình đăng nhập SDDM)
+if command -v rsvg-convert >/dev/null 2>&1; then
+	rsvg-convert -w 1920 -h 1080 \
+		-o /usr/share/backgrounds/mayxcloudos/wallpaper.png \
+		/usr/share/backgrounds/mayxcloudos/wallpaper.svg
+fi
+
+# Trình cài đặt Calamares dùng branding mayxcloudos
+if [ -f /etc/calamares/settings.conf ]; then
+	sed -i 's/^branding:.*/branding: mayxcloudos/' /etc/calamares/settings.conf
+fi
+
+# Bộ gõ tiếng Việt (Unikey qua fcitx5)
+mkdir -p /etc/environment.d
+cat > /etc/environment.d/90-fcitx5.conf <<'EOF'
+XMODIFIERS=@im=fcitx
+QT_IM_MODULE=fcitx
+EOF

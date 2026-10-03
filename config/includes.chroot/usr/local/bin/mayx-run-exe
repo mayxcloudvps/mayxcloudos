@@ -1,0 +1,64 @@
+#!/bin/sh
+# mayx-run-exe: chạy .exe / .msi / .bat bằng Wine, mỗi ứng dụng một môi trường (prefix) riêng.
+# Được gọi tự động khi nhấp đúp file .exe hoặc gõ ./app.exe (qua binfmt_misc).
+set -u
+
+if [ $# -lt 1 ]; then
+	echo "Cách dùng: mayx-run-exe <file.exe|file.msi> [tham số...]" >&2
+	exit 2
+fi
+
+target=$1
+shift
+
+if [ ! -f "$target" ]; then
+	echo "Không tìm thấy file: $target" >&2
+	exit 1
+fi
+
+target=$(readlink -f "$target")
+base="${XDG_DATA_HOME:-$HOME/.local/share}/mayxcloud/prefixes"
+mkdir -p "$base"
+
+# Nếu file nằm sẵn trong một prefix (app đã cài) thì dùng lại đúng prefix đó.
+case "$target" in
+"$base"/*/drive_c/*)
+	rel=${target#"$base"/}
+	prefix="$base/${rel%%/*}"
+	;;
+*)
+	name=$(basename "$target")
+	name=${name%.*}
+	slug=$(printf '%s' "$name" | tr 'A-Z' 'a-z' | tr -c 'a-z0-9\n' '-' | sed 's/-*$//')
+	hash=$(printf '%s' "$(dirname "$target")" | cksum | cut -d' ' -f1)
+	prefix="$base/${slug:-app}-$hash"
+	;;
+esac
+
+export WINEPREFIX="$prefix"
+export WINEARCH="${WINEARCH:-win64}"
+export WINEDEBUG="${WINEDEBUG:--all}"
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree,mshtml=}"
+
+notify() {
+	if command -v notify-send >/dev/null 2>&1; then
+		notify-send -a mayxcloudos "$1" "$2" >/dev/null 2>&1
+	fi
+	return 0
+}
+
+if [ ! -d "$prefix/drive_c" ]; then
+	notify "mayxcloudos" "Đang tạo môi trường riêng cho $(basename "$target")..."
+	wineboot -u >/dev/null 2>&1
+	if command -v setup_dxvk >/dev/null 2>&1; then
+		setup_dxvk install --symlink >/dev/null 2>&1
+	fi
+fi
+
+cd "$(dirname "$target")" 2>/dev/null || true
+
+case "$target" in
+*.msi | *.MSI) exec wine msiexec /i "$target" "$@" ;;
+*.bat | *.BAT | *.cmd | *.CMD) exec wine cmd /c "$target" "$@" ;;
+*) exec wine "$target" "$@" ;;
+esac

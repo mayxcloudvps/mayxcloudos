@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=mayxcloudos first login
+Exec=/usr/local/bin/mayx-first-login
+NoDisplay=true
+X-KDE-autostart-after=panel
