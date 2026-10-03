@@ -29,6 +29,12 @@ if [ -f /etc/calamares/settings.conf ]; then
 	sed -i 's/^branding:.*/branding: mayxcloudos/' /etc/calamares/settings.conf
 fi
 
+# Màn hình khởi động: logo mayxcloudos (Plymouth)
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+	plymouth-set-default-theme mayxcloudos
+	update-initramfs -u -k all
+fi
+
 # Bộ gõ tiếng Việt (Unikey qua fcitx5)
 mkdir -p /etc/environment.d
 cat > /etc/environment.d/90-fcitx5.conf <<'EOF'
