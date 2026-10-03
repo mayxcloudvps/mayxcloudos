@@ -1,0 +1,39 @@
+name: Build mayxcloudos ISO
+
+on:
+  workflow_dispatch:
+    inputs:
+      fast:
+        description: "Build nhanh (nén zstd, ISO to hơn)"
+        type: boolean
+        default: true
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Giải phóng dung lượng ổ đĩa
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Build ISO (trong container Debian 13)
+        env:
+          FAST: ${{ github.event_name == 'workflow_dispatch' && inputs.fast && '1' || '0' }}
+        run: |
+          sudo docker run --rm --privileged -e FAST="$FAST" \
+            -v "$PWD":/work -w /work debian:trixie bash build.sh
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: mayxcloudos-iso
+          path: |
+            out/*.iso
+            out/SHA256SUMS
+          retention-days: 7

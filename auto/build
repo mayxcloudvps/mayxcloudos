@@ -1,0 +1,6 @@
+#!/bin/bash
+# Dừng ngay khi lb build lỗi (pipefail), vẫn ghi log ra build.log
+set -e
+set -o pipefail
+
+lb build noauto "${@}" 2>&1 | tee build.log

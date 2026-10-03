@@ -1,0 +1,6 @@
+[Default Applications]
+application/x-ms-dos-executable=mayx-exe.desktop
+application/x-msdownload=mayx-exe.desktop
+application/vnd.microsoft.portable-executable=mayx-exe.desktop
+application/x-msi=mayx-exe.desktop
+application/x-ms-installer=mayx-exe.desktop

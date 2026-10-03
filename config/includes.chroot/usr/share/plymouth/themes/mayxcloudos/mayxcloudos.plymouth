@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=mayxcloudos
+Description=Màn hình khởi động mayxcloudos
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/mayxcloudos
+ScriptFile=/usr/share/plymouth/themes/mayxcloudos/mayxcloudos.script

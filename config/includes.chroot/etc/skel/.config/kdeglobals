@@ -1,0 +1,6 @@
+[General]
+AccentColor=27,99,224
+accentColorFromWallpaper=false
+
+[KDE]
+LookAndFeelPackage=org.mayxcloudos.desktop

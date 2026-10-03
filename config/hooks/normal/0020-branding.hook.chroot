@@ -1,0 +1,49 @@
+#!/bin/sh
+# Đặt tên/branding mayxcloudos.
+set -e
+
+# /etc/os-release là symlink tới /usr/lib/os-release trên Debian
+cat > /usr/lib/os-release <<'EOF'
+PRETTY_NAME="mayxcloudos 1.0"
+NAME="mayxcloudos"
+VERSION_ID="1.0"
+VERSION="1.0 (May)"
+VERSION_CODENAME=may
+ID=mayxcloudos
+ID_LIKE=debian
+LOGO=mayxcloudos
+EOF
+
+printf 'mayxcloudos 1.0 \\n \\l\n\n' > /etc/issue
+printf 'mayxcloudos 1.0\n' > /etc/issue.net
+echo mayxcloudos > /etc/hostname
+
+# Cập nhật bộ icon để nút Start dùng được logo mayxcloudos
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+	gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+fi
+
+# Trình cài đặt Calamares dùng branding mayxcloudos
+if [ -f /etc/calamares/settings.conf ]; then
+	sed -i 's/^branding:.*/branding: mayxcloudos/' /etc/calamares/settings.conf
+fi
+
+# Đổi tên "Install Debian" trên các file .desktop của trình cài đặt
+for f in $(grep -rIl "Debian" /usr/share/applications /etc/skel /usr/share/calamares 2>/dev/null | grep -E '\.desktop$' || true); do
+	if grep -qi "calamares" "$f"; then
+		sed -i -E '/^(Name|GenericName|Comment)(\[[^]]*\])?=/ s/Debian/mayxcloudos/g' "$f"
+	fi
+done
+
+# Màn hình khởi động: logo mayxcloudos (Plymouth)
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+	plymouth-set-default-theme mayxcloudos
+	update-initramfs -u -k all
+fi
+
+# Bộ gõ tiếng Việt (Unikey qua fcitx5)
+mkdir -p /etc/environment.d
+cat > /etc/environment.d/90-fcitx5.conf <<'EOF'
+XMODIFIERS=@im=fcitx
+QT_IM_MODULE=fcitx
+EOF

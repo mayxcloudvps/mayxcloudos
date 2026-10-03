@@ -1,0 +1,12 @@
+#!/bin/sh
+# Chạy một lần ở lần đăng nhập đầu tiên: đặt hình nền mayxcloudos.
+marker="${XDG_CONFIG_HOME:-$HOME/.config}/mayxcloudos-firstlogin-done"
+[ -e "$marker" ] && exit 0
+
+sleep 6
+if command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+	plasma-apply-wallpaperimage /usr/share/backgrounds/mayxcloudos/wallpaper.png
+fi
+
+mkdir -p "$(dirname "$marker")"
+: > "$marker"

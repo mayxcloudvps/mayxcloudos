@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "mayxcloudos"
+            }
+        ],
+        "Description": "Giao diện mayxcloudos",
+        "Id": "org.mayxcloudos.desktop",
+        "License": "GPL-2.0+",
+        "Name": "mayxcloudos",
+        "Version": "1.0"
+    }
+}

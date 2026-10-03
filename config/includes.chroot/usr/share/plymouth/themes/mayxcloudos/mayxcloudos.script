@@ -1,0 +1,59 @@
+# mayxcloudos boot splash: logo ở giữa + thanh tiến độ
+
+Window.SetBackgroundTopColor(0.976, 0.984, 0.996);
+Window.SetBackgroundBottomColor(0.976, 0.984, 0.996);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+# Logo, co theo độ rộng màn hình
+logo.image = Image("logo.png");
+target_w = Math.Int(screen_w * 0.34);
+if (target_w > 640) target_w = 640;
+if (target_w < 240) target_w = 240;
+scale = target_w / logo.image.GetWidth();
+logo.image = logo.image.Scale(target_w, Math.Int(logo.image.GetHeight() * scale));
+logo.sprite = Sprite(logo.image);
+logo_x = Math.Int((screen_w - logo.image.GetWidth()) / 2);
+logo_y = Math.Int(screen_h / 2 - logo.image.GetHeight() / 2 - 40);
+logo.sprite.SetPosition(logo_x, logo_y, 10);
+
+# Thanh tiến độ
+track.image = Image("track.png");
+track.sprite = Sprite(track.image);
+ui.bar_w = track.image.GetWidth();
+ui.bar_x = Math.Int((screen_w - ui.bar_w) / 2);
+ui.bar_y = logo_y + logo.image.GetHeight() + 56;
+track.sprite.SetPosition(ui.bar_x, ui.bar_y, 10);
+
+ui.fill_image = Image("fill.png");
+ui.fill_sprite = Sprite();
+ui.fill_sprite.SetPosition(ui.bar_x, ui.bar_y, 11);
+ui.fill_width = 0;
+
+state.frame = 0;
+state.real = 0;
+
+fun update_bar() {
+  fake = state.frame / (state.frame + 1500);
+  p = state.real;
+  if (fake > p) p = fake;
+  w = Math.Int(ui.bar_w * p);
+  if (w < 8) w = 8;
+  if (w > ui.bar_w) w = ui.bar_w;
+  if (w != ui.fill_width) {
+    ui.fill_width = w;
+    ui.fill_sprite.SetImage(ui.fill_image.Scale(w, ui.fill_image.GetHeight()));
+  }
+}
+
+fun refresh_callback() {
+  state.frame++;
+  update_bar();
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+fun boot_progress_callback(duration, progress) {
+  state.real = progress;
+}
+Plymouth.SetBootProgressFunction(boot_progress_callback);
