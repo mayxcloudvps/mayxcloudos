@@ -5,6 +5,8 @@ lb config noauto \
     --distribution trixie \
     --architectures amd64 \
     --archive-areas "main contrib non-free non-free-firmware" \
+    --parent-mirror-bootstrap "http://deb.debian.org/debian/" \
+    --mirror-bootstrap "http://deb.debian.org/debian/" \
     --binary-images iso-hybrid \
     --debian-installer none \
     --linux-flavours amd64 \
