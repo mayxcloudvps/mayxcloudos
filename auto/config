@@ -1,21 +1,17 @@
 #!/bin/sh
 set -e
 
-# FAST=1: nén squashfs bằng zstd (build nhanh hơn, ISO to hơn ~15-20%)
-if [ "${FAST:-0}" = "1" ]; then
-
 lb config noauto \
-	--distribution trixie \
-	--architectures amd64 \
-	--archive-areas "main contrib non-free non-free-firmware" \
-	--binary-images iso-hybrid \
-	--debian-installer none \
-	--linux-flavours amd64 \
-	--security true \
-	--memtest none \
-	--checksums sha256 \
-	--iso-application "mayxcloudos" \
-	--iso-publisher "MayXCloud" \
-	--iso-volume "MAYXCLOUDOS" \
-	--bootappend-live "boot=live components quiet username=may hostname=mayxcloudos locales=vi_VN.UTF-8 timezone=Asia/Ho_Chi_Minh keyboard-layouts=us" \
-	"${@}"
+    --distribution trixie \
+    --architectures amd64 \
+    --archive-areas "main contrib non-free non-free-firmware" \
+    --binary-images iso-hybrid \
+    --debian-installer none \
+    --linux-flavours amd64 \
+    --security true \
+    --memtest none \
+    --checksums sha256 \
+    --iso-application "mayxcloudos" \
+    --iso-publisher "MâyXCloud" \
+    --iso-volume "MAYXCLOUDOS" \
+    --bootappend-live "boot=live components quiet username=may hostname=mayxcloudos locale=vi_VN.UTF-8 timezone=Asia/Ho_Chi_Minh keyboard-layouts=us"
