@@ -22,10 +22,12 @@ jobs:
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           df -h /
 
-      - name: Build ISO
+      - name: Build ISO (trong container Debian 13)
         env:
           FAST: ${{ github.event_name == 'workflow_dispatch' && inputs.fast && '1' || '0' }}
-        run: sudo -E bash build.sh
+        run: |
+          sudo docker run --rm --privileged -e FAST="$FAST" \
+            -v "$PWD":/work -w /work debian:trixie bash build.sh
 
       - name: Upload ISO
         uses: actions/upload-artifact@v4
